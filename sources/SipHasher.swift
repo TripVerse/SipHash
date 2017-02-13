@@ -23,8 +23,8 @@ public struct SipHasher {
 
     /// The default key, used by the default initializer.
     /// Each process has a unique key, chosen randomly when the first instance of `SipHasher` is initialized.
-    static let key: (UInt64, UInt64) = (randomUInt64(), randomUInt64())
-
+    private(set) static var key: (UInt64, UInt64) = (randomUInt64(), randomUInt64())
+    
     /// Word 0 of the internal state, initialized to ASCII encoding of "somepseu".
     var v0: UInt64 = 0x736f6d6570736575
     /// Word 1 of the internal state, initialized to ASCII encoding of "dorandom".
@@ -48,6 +48,12 @@ public struct SipHasher {
         self.init(k0: SipHasher.key.0, k1: SipHasher.key.1)
     }
 
+    public init(customKey : (UInt64, UInt64))
+    {
+        self.init()
+        SipHasher.key = customKey
+    }
+    
     /// Initialize a new instance with the specified key.
     ///
     /// - Parameter k0: The low 64 bits of the secret key.
